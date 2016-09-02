@@ -72,6 +72,16 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+def returnSolution(start, goal):
+    parent = goal
+    solution = []
+    while parent[0]!=start:
+        solution.append(parent[2])
+        parent = parent[1]
+    # print "Solution:", solution[::-1]
+    return solution[::-1]
+
+
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -87,7 +97,24 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import Stack
+    frontier = Stack()
+    generated  = {}
+    frontier.push((problem.getStartState(), None, None))
+    # print "Start:", problem.getStartState()
+    # print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    # print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    while not frontier.isEmpty():
+        currentNode = frontier.pop()
+        if problem.isGoalState(currentNode[0]):
+            return returnSolution(problem.getStartState(), currentNode)
+        generated[currentNode[0]] = 1 #Explored
+        successors = problem.getSuccessors(currentNode[0])
+        for successor in successors:
+            node = (successor[0], currentNode, successor[1])
+            if not generated.has_key(successor[0]):
+                frontier.push(node)
+                generated[currentNode[0]] = 2 #In frontier
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
