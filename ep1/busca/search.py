@@ -101,9 +101,25 @@ def depthFirstSearch(problem):
     frontier = Stack()
     generated  = {}
     frontier.push((problem.getStartState(), None, None))
-    # print "Start:", problem.getStartState()
-    # print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    # print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    while not frontier.isEmpty():
+        currentNode = frontier.pop()
+        if problem.isGoalState(currentNode[0]):
+            return returnSolution(problem.getStartState(), currentNode)
+        if generated.has_key(currentNode[0]):
+            continue
+        generated[currentNode[0]] = 1 #Explored
+        successors = problem.getSuccessors(currentNode[0])
+        for successor in successors:
+            node = (successor[0], currentNode, successor[1])
+            frontier.push(node)
+
+def breadthFirstSearch(problem):
+    """Search the shallowest nodes in the search tree first."""
+    "*** YOUR CODE HERE ***"
+    from util import Queue
+    frontier = Queue()
+    generated  = {}
+    frontier.push((problem.getStartState(), None, None))
     while not frontier.isEmpty():
         currentNode = frontier.pop()
         if problem.isGoalState(currentNode[0]):
@@ -114,12 +130,7 @@ def depthFirstSearch(problem):
             node = (successor[0], currentNode, successor[1])
             if not generated.has_key(successor[0]):
                 frontier.push(node)
-                generated[currentNode[0]] = 2 #In frontier
-
-def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+                generated[successor[0]] = 2 #In frontier
 
 def iterativeDeepeningSearch(problem):
     """
@@ -131,7 +142,33 @@ def iterativeDeepeningSearch(problem):
     goal. Make sure to implement a graph search algorithm.
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    limit = 0
+    while True:
+        solution = depthLimitedSearch(problem, limit)
+        if solution != -1:
+            return solution
+        limit += 1
+
+def depthLimitedSearch(problem, limit):
+    from util import Stack
+    frontier = Stack()
+    generated  = {}
+    frontier.push((problem.getStartState(), None, None, 0, 0))
+    while not frontier.isEmpty():
+        currentNode = frontier.pop()
+        if problem.isGoalState(currentNode[0]):
+            return returnSolution(problem.getStartState(), currentNode)
+        if currentNode[4] == limit:
+            continue
+        if generated.has_key(currentNode[0]):
+            if currentNode[3] > generated[currentNode[0]]:
+                continue
+        generated[currentNode[0]] = currentNode[3] #Explored & mark cost
+        successors = problem.getSuccessors(currentNode[0])
+        for successor in successors:
+            node = (successor[0], currentNode, successor[1], currentNode[3]+successor[2], currentNode[4]+1)
+            frontier.push(node)
+    return -1
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
