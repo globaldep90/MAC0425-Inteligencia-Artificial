@@ -78,7 +78,6 @@ def returnSolution(start, goal):
     while parent[0]!=start:
         solution.append(parent[2])
         parent = parent[1]
-    # print "Solution:", solution[::-1]
     return solution[::-1]
 
 

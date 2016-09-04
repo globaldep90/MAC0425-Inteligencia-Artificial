@@ -295,14 +295,17 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        corners = ()
+        if(self.startingPosition in self.corners):
+            corners = (self.startingPosition)
+        return (self.startingPosition, corners)
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return len(state[1]) == 4
 
     def getSuccessors(self, state):
         """
@@ -317,14 +320,17 @@ class CornersProblem(search.SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            "*** YOUR CODE HERE ***"
+            x,y = state[0]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if not hitsWall:
+                nextpos = (nextx, nexty)
+                nextcorners = state[1]
+                if nextpos in self.corners and nextpos not in state[1]:
+                    nextcorners = (nextpos,)+state[1]
+                nextstate = (nextpos, nextcorners)
+                successors.append((nextstate, action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -360,6 +366,16 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+    dists = []
+    if len(state[1])==4:
+        return 0
+    for corner in corners:
+        if corner not in state[1]:
+            xy1 = state[0]
+            xy2 = corner
+            dists += [abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])]
+    return min(dists)
+
     return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
