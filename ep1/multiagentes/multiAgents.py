@@ -66,15 +66,49 @@ class ReflexAgent(Agent):
         Print out these variables to see what you're getting, then combine them
         to create a masterful evaluation function.
         """
+
+        from util import manhattanDistance
         # Useful information you can extract from a GameState (pacman.py)
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
         newFood = successorGameState.getFood()
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+        res = 0
 
-        "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        # Check ghosts
+        for ghostState in newGhostStates:
+          dist = manhattanDistance(ghostState.getPosition(), newPos)
+          if ghostState.scaredTimer > 0: # If scared, pursue
+            res += 30 - 10*dist
+          elif dist <= 2: # Flee from the ghosts!
+            res += -40 + 10*dist
+
+        # Will I eat food?
+        if successorGameState.getNumFood() < currentGameState.getNumFood():
+          res += 5
+
+        # Is there food around that position?
+        if successorGameState.hasFood(newPos[0]+1, newPos[1]):
+          res += 1
+        if successorGameState.hasFood(newPos[0], newPos[1])+1:
+          res += 1
+        if successorGameState.hasFood(newPos[0]-1, newPos[1]):
+          res += 1
+        if successorGameState.hasFood(newPos[0], newPos[1]-1):
+          res += 1
+
+        # Is there a capsule?
+        if newPos in currentGameState.getCapsules():
+          res += 3
+
+        # Avoid dead ends
+        walls = successorGameState.getWalls()
+        wallCount = sum([walls[newPos[0]+1][newPos[1]], walls[newPos[0]-1][newPos[1]], walls[newPos[0]][newPos[1]+1], walls[newPos[0]][newPos[1]-1]])
+        if wallCount >= 3:
+          res -= 4
+
+        return res
 
 def scoreEvaluationFunction(currentGameState):
     """
