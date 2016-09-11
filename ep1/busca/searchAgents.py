@@ -1,3 +1,6 @@
+# Yara Grassi Gouffon
+# NUSP 4172560
+
 # searchAgents.py
 # ---------------
 # Licensing Information:  You are free to use or extend these projects for
@@ -362,21 +365,36 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
+    from util import manhattanDistance
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    dists = []
     if len(state[1])==4:
         return 0
-    for corner in corners:
-        if corner not in state[1]:
-            xy1 = state[0]
-            xy2 = corner
-            dists += [abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])]
-    return min(dists)
 
-    return 0 # Default to trivial solution
+    ref = state[0]
+    list = []
+    for corner in corners:
+            if corner not in state[1]:
+                list.append(corner)
+    
+    minDist = float('inf')
+    total = 0
+    while len(list) > 0:
+        for corner in list:
+            dist = manhattanDistance(corner, ref)
+            if(dist < minDist):
+                index = corner
+                minDist = dist
+        total += minDist
+        minDist = float('inf')
+        if ref in list:
+            list.remove(ref)
+        ref = index
+
+    return total
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
