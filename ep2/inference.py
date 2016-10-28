@@ -160,10 +160,7 @@ class ExactInference(InferenceModule):
         else:
             for p in self.legalPositions:
                 trueDistance = util.manhattanDistance(p, pacmanPosition)
-                if emissionModel[trueDistance] > 0:
-                    self.beliefs[p] = emissionModel[trueDistance]*self.beliefs[p]
-                else:
-                    self.beliefs[p] = 0
+                self.beliefs[p] = emissionModel[trueDistance]*self.beliefs[p]
 
         "*** END YOUR CODE HERE ***"
 
