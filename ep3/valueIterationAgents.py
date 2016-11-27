@@ -49,10 +49,11 @@ class ValueIterationAgent(ValueEstimationAgent):
         while self.iterations>0:
           tempVals = util.Counter()
           self.iterations -= 1
-          # maxVal = 0
           for state in states:
-            # temp[state] = max()
             actions = self.mdp.getPossibleActions(state)
+            tempVals[state] = float('-inf')
+            if not actions:
+              tempVals[state] = 0
             for action in actions:
               nextStates = self.mdp.getTransitionStatesAndProbs(state, action)
               temp = 0
@@ -76,7 +77,6 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        # util.raiseNotDefined()
         temp = 0
         nextStates = self.mdp.getTransitionStatesAndProbs(state, action)
         for nextState, prob in nextStates:
@@ -93,9 +93,8 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
-        # util.raiseNotDefined()
         actions = self.mdp.getPossibleActions(state)
-        maxVal = 0
+        maxVal = float('-inf')
         chosenAction = None
         for action in actions:
           temp = 0
