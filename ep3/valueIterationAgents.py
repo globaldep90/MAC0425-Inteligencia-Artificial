@@ -1,3 +1,6 @@
+# Yara Grassi Gouffon
+# NUSP 4172560
+
 # valueIterationAgents.py
 # -----------------------
 # Licensing Information:  You are free to use or extend these projects for
