@@ -1,0 +1,13 @@
+class: "GradeClassifierTest"
+classifierModule: "decisionTree"
+classifierClass: "DecisionTreeClassifier"
+
+max_depth: "2"
+metric: "entropy"
+
+datasetName: "car"
+
+# our solution: 75%
+exactOutput: "False"
+accuracyScale: "1"
+accuracyThresholds: "60 70 80 90"
