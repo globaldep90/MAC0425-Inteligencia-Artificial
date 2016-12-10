@@ -107,9 +107,15 @@ class DecisionTreeClassifier( classificationMethod.ClassificationMethod ) :
 		"""
 		Classify all test data using the learned tree model
 		"""
-		"*** YOUR CODE HERE ***"
-		# util.raiseNotDefined()
-		# return [ self.guess for i in testData ]
-		print "yay"
-		print self.guess
-		return self.guess
+		results = []
+		for t in testData:
+			results.append(self.test(self.tree, t))
+		return results
+
+	def test(self, node, data):
+		while node.column != -1:
+			if data[node.column] == 1:
+				node = node.rightchild
+			else:
+				node = node.leftchild
+		return node.label
