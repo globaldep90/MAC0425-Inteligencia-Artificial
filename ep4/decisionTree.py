@@ -1,3 +1,6 @@
+# Yara Grassi Gouffon
+# NUSP 4172560
+
 from copy import deepcopy as copy
 import util
 import metrics

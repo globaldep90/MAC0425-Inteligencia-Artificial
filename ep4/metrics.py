@@ -1,3 +1,6 @@
+# Yara Grassi Gouffon
+# NUSP 4172560
+
 import sys
 import math
 import util
