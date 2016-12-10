@@ -1,5 +1,6 @@
 from copy import deepcopy as copy
 import util
+import metrics
 import classificationMethod
 
 class DecisionNode :
@@ -48,7 +49,7 @@ class DecisionTreeClassifier( classificationMethod.ClassificationMethod ) :
 		"*** YOUR CODE HERE ***"
 		# print labels
 		# util.raiseNotDefined()
-		tree = DecisionNode(-1, None, self.guess)
+		tree = DecisionNode(self.bestSplit(data, labels), None, self.guess)
 		# print "tree"
 		# print tree.label
 		return tree
@@ -56,30 +57,82 @@ class DecisionTreeClassifier( classificationMethod.ClassificationMethod ) :
 	def isLeaf( self , data , labels , depth ) :
 		""" Verify stop conditions (whether to split is necessary) """
 		"*** YOUR CODE HERE ***"
-		util.raiseNotDefined()
+		if depth >= self.maxdepth:
+			return True
+		counter = util.Counter()
+		counter.incrementAll(labels, 1)
+		if counter[0] == 0 or counter[1]==0:
+			return True
+		return all(data[0] == d for d in data)
 
 	def getMostFrequentLabel( self , labels ) :
 		"*** YOUR CODE HERE ***"
 		util.raiseNotDefined()
 
+	# def bestSplit( self , data , labels ) :
+	# 	""" Get the best variable to split the dataset using the metric function """
+	# 	"*** YOUR CODE HERE ***"
+	# 	# util.raiseNotDefined()
+	# 	print "data", data
+	# 	val = float("inf")
+	# 	res = 0
+	# 	vars = util.Counter()
+	# 	vars.incrementAll(labels, 1)
+	# 	for var in vars.keys():
+	# 		# vars[var] = entropy(labels)
+	# 		# set1 = []
+	# 		# set2 = []
+	# 		set1 = vars.copy()
+	# 		set2 = vars.copy()
+	# 		for var2 in vars:
+	# 			if var2 <= var:
+	# 				# set1.append(var2)
+	# 				set2[var2] = 0
+	# 			else:
+	# 				# set2.append(var2)
+	# 				set1[var2] = 0
+	# 		temp = (set1.totalCount()*metrics.entropy(set1) + set2.totalCount()*metrics.entropy(set2))/vars.totalCount()
+	# 		print vars, set1, set2
+	# 		print temp
+	# 		if val>temp:
+	# 			val = temp
+	# 			res = var
+	# 	return res
+	# 	# return vars.argMax()
+
 	def bestSplit( self , data , labels ) :
 		""" Get the best variable to split the dataset using the metric function """
 		"*** YOUR CODE HERE ***"
 		# util.raiseNotDefined()
+		# print "data", data
+		# print "metric", self.metric
+		print len(data)
 		val = float("inf")
-		vars = util.Counter()
-		vars.incrementAll(labels, 1)
-		for var in vars.keys():
+		res = 0
+		vars = len(data[0])
+		n = len(data)
+		# print 
+		# vars = util.Counter()
+		# vars.incrementAll(labels, 1)
+		for var in range(vars):
 			# vars[var] = entropy(labels)
+			set0 = []
 			set1 = []
-			set2 = []
-			for var2 in vars:
-				if var2 <= var:
-					set1.append(var2)
+			# set0 = vars.copy()
+			# set1 = vars.copy()
+			for i in range(n):
+				if data[i][var] == 0:
+					set0.append(labels[i])
+					# set1[var2] = 0
 				else:
-					set2.append(var2)
-			temp = (len(set1)*entropy(set1) + len(set2)*entropy(set2))/len(vars)
-			if val<temp:
+					set1.append(labels[i])
+					# set0[var2] = 0
+			# temp = (len(set0)*metrics.entropy(set0) + len(set1)*metrics.entropy(set1))/vars
+			temp = (len(set0)*metrics.entropy(set0) + len(set1)*metrics.entropy(set1))/n
+			# temp = (len(set0)*metrics.error(set0) + len(set1)*metrics.error(set1))/vars
+			# print vars, set0, set1
+			print var, temp, len(set0), len(set1)
+			if val>temp:
 				val = temp
 				res = var
 		return res
@@ -93,7 +146,17 @@ class DecisionTreeClassifier( classificationMethod.ClassificationMethod ) :
 		other with instances having variable as 1
 		"""
 		"*** YOUR CODE HERE ***"
-		util.raiseNotDefined()
+		# util.raiseNotDefined()
+		n = len(data)
+		set0 = []
+		set1 = []
+		for i in range(n):
+			if data[i][variable]==0:
+				set0.append(data[i])
+			else:
+				set1.append(data[i])
+		return (set0, set1)
+
 
 	def classify( self , testData ) :
 		"""
