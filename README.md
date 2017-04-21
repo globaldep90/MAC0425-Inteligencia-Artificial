@@ -1,5 +1,6 @@
 # MAC0425 - Inteligência Artificial
-Exercícios-Programa da disciplina de Inteligência Artificial do IME-USP, ministrada pelo professor Denis D. Mauá.
+Exercícios-Programa da disciplina de Inteligência Artificial do IME-USP, ministrada pelo professor Denis D. Mauá. 
+Em todos os EPs, recebemos o código do sistema já pronto com testes automatizados (e nos EPs de 1 a 3, a visualização do jogo do Pacman) e implementamos apenas os algoritmos de inteligência artificial. Como não tinha muita experiência com Python na época, o EP1 não representa meu melhor código...
 
 **EP1 - Algoritmos de busca:** Implementação de um Pacman que se joga sozinho. Utilização de algoritmos de Busca em Profundidade, Busca em Largura, Busca de Custo Uniforme, Busca de Aprofundamento Iterativo e A*. Implementação também de um agente minimax com poda alpha-beta.
 
